@@ -1,0 +1,252 @@
+body {
+	background-color: #11130f;
+	background-image: linear-gradient(90deg, rgba(10, 15, 18, 0.62), rgba(10, 15, 18, 0.18) 58%, rgba(10, 15, 18, 0.48)), url("../../images/hero-celestial-temple.png");
+	background-position: center center;
+	background-size: cover;
+	background-attachment: fixed;
+	color: #29302d;
+}
+
+body:before {
+	background: rgba(12, 15, 16, 0.18);
+}
+
+#wrapper > .bg {
+	background-image: linear-gradient(90deg, rgba(10, 15, 18, 0.66), rgba(10, 15, 18, 0.18) 58%, rgba(10, 15, 18, 0.48)), url("../../images/hero-celestial-temple.png");
+	background-position: center center;
+	background-size: cover;
+}
+
+#intro {
+	align-items: flex-start;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 7rem 4rem 6rem 4rem;
+	text-align: left;
+}
+
+#intro h1 {
+	color: #fff8eb;
+	font-size: 5.3rem;
+	line-height: 0.95;
+	text-shadow: 0 0.15rem 1.25rem rgba(0, 0, 0, 0.55);
+}
+
+#intro p {
+	color: rgba(255, 248, 235, 0.92);
+	font-size: 1.15rem;
+	max-width: 44rem;
+	text-align: left;
+	text-shadow: 0 0.1rem 0.9rem rgba(0, 0, 0, 0.75);
+}
+
+#intro .eyebrow,
+.eyebrow {
+	color: #caa76a;
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+	font-size: 0.72rem;
+	font-style: normal;
+	font-weight: 900;
+	letter-spacing: 0.14em;
+	margin: 0 0 0.85rem 0;
+	text-transform: uppercase;
+}
+
+#intro a {
+	color: #ffe6ad;
+	border-bottom-color: rgba(255, 230, 173, 0.45);
+}
+
+#intro .actions {
+	justify-content: flex-start;
+}
+
+#header .logo {
+	color: #fff7e8 !important;
+	border-color: rgba(234, 202, 147, 0.8) !important;
+	background: rgba(24, 22, 18, 0.35);
+	box-shadow: 0 0 1.3rem rgba(202, 167, 106, 0.22);
+}
+
+#nav {
+	background: rgba(255, 250, 240, 0.9);
+	backdrop-filter: blur(12px);
+}
+
+#nav ul.links li.active a {
+	background-color: rgba(202, 167, 106, 0.24);
+	color: #1b2428;
+}
+
+#navPanelToggle {
+	background: rgba(13, 18, 18, 0.72);
+	box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+	color: #fff8eb !important;
+}
+
+#navPanelToggle:before {
+	color: #caa76a;
+}
+
+#main {
+	background: #fffaf0;
+	box-shadow: 0 0 3rem rgba(7, 12, 14, 0.35);
+}
+
+#main > .post,
+#main > .posts > article {
+	background: linear-gradient(180deg, #fffdf8 0%, #f8efe2 100%);
+}
+
+.tai-feature header.major p {
+	max-width: 42rem;
+}
+
+.image.main img,
+.tai-set-grid .image.fit img {
+	object-fit: cover;
+	width: 100%;
+}
+
+.image.main img {
+	max-height: 36rem;
+}
+
+.tai-set-grid .image.fit {
+	aspect-ratio: 16 / 10;
+	background: #171915;
+}
+
+.tai-set-grid .image.fit img {
+	height: 100%;
+}
+
+.tai-set-grid article {
+	border-color: rgba(112, 82, 46, 0.22) !important;
+}
+
+.tai-set-grid article h2 a,
+.tai-feature h2 a,
+.tai-request-band h2 {
+	color: #1e292c;
+}
+
+.tai-set-grid .date,
+.tai-feature .date {
+	color: #9d7445;
+	font-weight: 900;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.tai-request-band {
+	align-items: center;
+	background: linear-gradient(135deg, #173133 0%, #39563e 52%, #b58b53 100%);
+	color: #fff8eb;
+	display: flex;
+	gap: 2rem;
+	justify-content: space-between;
+	padding: 3rem 4rem;
+}
+
+.tai-request-band h2,
+.tai-request-band p {
+	color: #fff8eb;
+	margin-bottom: 0.75rem;
+}
+
+.tai-request-band .actions {
+	margin: 0;
+	white-space: nowrap;
+}
+
+.button.primary,
+input[type="submit"].primary {
+	background-color: #b58b53 !important;
+	box-shadow: none;
+	color: #101513 !important;
+}
+
+.button.primary:hover,
+input[type="submit"].primary:hover {
+	background-color: #d2a764 !important;
+}
+
+.request-page {
+	background-image: linear-gradient(90deg, rgba(12, 17, 18, 0.78), rgba(12, 17, 18, 0.22)), url("../../images/request-sunrise.png");
+	background-position: center center;
+}
+
+.request-page #wrapper > .bg {
+	background-image: linear-gradient(90deg, rgba(12, 17, 18, 0.78), rgba(12, 17, 18, 0.22)), url("../../images/request-sunrise.png");
+	background-position: center center;
+}
+
+.request-shell {
+	background: rgba(255, 250, 240, 0.95) !important;
+}
+
+.request-shell form {
+	max-width: 46rem;
+	margin: 0 auto;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+	background: rgba(255, 255, 255, 0.78);
+	border-color: rgba(81, 60, 38, 0.18);
+}
+
+#footer {
+	background: rgba(248, 239, 226, 0.94);
+}
+
+#copyright {
+	color: rgba(255, 248, 235, 0.72);
+}
+
+@media screen and (max-width: 980px) {
+	#intro {
+		padding: 6rem 2rem 4rem 2rem;
+	}
+
+	#intro h1 {
+		font-size: 4rem;
+	}
+
+	.tai-request-band {
+		align-items: flex-start;
+		flex-direction: column;
+		padding: 2.25rem;
+	}
+
+	.tai-request-band .actions {
+		white-space: normal;
+	}
+}
+
+@media screen and (max-width: 736px) {
+	#intro {
+		align-items: center;
+		min-height: 92vh;
+		text-align: center;
+	}
+
+	#intro h1 {
+		font-size: 3rem;
+	}
+
+	#intro p {
+		font-size: 1rem;
+		text-align: center;
+	}
+
+	#intro .actions {
+		justify-content: center;
+	}
+
+	.tai-request-band {
+		padding: 1.75rem;
+	}
+}
