@@ -47,15 +47,25 @@
 									Own Tai Chi Set</h1>
 									<p>Tell us what kind of practice you want: calm, energizing, beginner-friendly, meditative, or something made for a specific avatar.</p>
 								</header>
-								<form method="post" action="#">
+								<div class="request-status request-status-success" id="request-success">
+									Your request was sent. Thank you.
+								</div>
+								<div class="request-status request-status-error" id="request-error">
+									Your request could not be sent. Please check the email configuration and try again.
+								</div>
+								<form method="post" action="send-request.php">
 									<div class="fields">
+										<div class="field hidden-field" aria-hidden="true">
+											<label for="website">Website</label>
+											<input type="text" name="website" id="website" tabindex="-1" autocomplete="off" />
+										</div>
 										<div class="field">
 											<label for="contact-email">Contact email:</label>
-											<input type="email" name="contact-email" id="contact-email" />
+											<input type="email" name="contact-email" id="contact-email" required />
 										</div>
 										<div class="field">
 											<label for="tai-chi-comments">Tai Chi set comments:</label>
-											<textarea name="tai-chi-comments" id="tai-chi-comments" rows="6"></textarea>
+											<textarea name="tai-chi-comments" id="tai-chi-comments" rows="6" required></textarea>
 										</div>
 									</div>
 									<ul class="actions">
@@ -82,6 +92,25 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script>
+				(function() {
+					var params = new URLSearchParams(window.location.search);
+					var sent = params.get('sent');
+					var message = params.get('message');
+					var success = document.getElementById('request-success');
+					var error = document.getElementById('request-error');
+
+					if (sent === '1' && success)
+						success.style.display = 'block';
+
+					if (sent === '0' && error) {
+						if (message)
+							error.textContent = message;
+
+						error.style.display = 'block';
+					}
+				})();
+			</script>
 
 	</body>
 </html>

@@ -191,6 +191,39 @@ input[type="submit"].primary:hover {
 	margin: 0 auto;
 }
 
+.request-status {
+	border: 1px solid rgba(81, 60, 38, 0.18);
+	display: none;
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+	font-size: 0.9rem;
+	font-weight: 900;
+	letter-spacing: 0.08em;
+	margin: 0 auto 2rem auto;
+	max-width: 46rem;
+	padding: 1rem 1.25rem;
+	text-transform: uppercase;
+}
+
+.request-status-success {
+	background: rgba(57, 86, 62, 0.12);
+	color: #39563e;
+}
+
+.request-status-error {
+	background: rgba(181, 83, 83, 0.12);
+	color: #8c3333;
+}
+
+.request-page .hidden-field {
+	height: 0;
+	margin: 0;
+	opacity: 0;
+	overflow: hidden;
+	pointer-events: none;
+	position: absolute;
+	width: 0;
+}
+
 input[type="text"],
 input[type="email"],
 textarea {
