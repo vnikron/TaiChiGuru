@@ -67,6 +67,9 @@ function smtp_send(array $config, string $subject, string $textBody, string $rep
     $host = (string) $smtp['host'];
     $port = (int) $smtp['port'];
     $encryption = strtolower((string) $smtp['encryption']);
+    if ($encryption === 'tls') {
+        $encryption = 'starttls';
+    }
     $timeout = (int) ($smtp['timeout_seconds'] ?? 30);
     $username = (string) $smtp['username'];
     $password = (string) $smtp['password'];

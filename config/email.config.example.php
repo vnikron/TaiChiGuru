@@ -9,7 +9,7 @@ return [
         // GoDaddy Professional Email / Titan common outgoing SMTP settings.
         'host' => 'smtpout.secureserver.net',
         'port' => 465,
-        'encryption' => 'ssl', // ssl, starttls, or none
+        'encryption' => 'ssl', // ssl, starttls/tls, or none
         'username' => 'support@taichiguru.com',
         'password' => 'PASTE_EMAIL_PASSWORD_HERE',
         'timeout_seconds' => 30,
