@@ -51,9 +51,9 @@
 									Your request was sent. Thank you.
 								</div>
 								<div class="request-status request-status-error" id="request-error">
-									Your request could not be sent. Please check the email configuration and try again.
+									Your request could not be sent. Please try again.
 								</div>
-								<form method="post" action="send-request.php">
+								<form id="request-set-form" method="post" action="">
 									<div class="fields">
 										<div class="field hidden-field" aria-hidden="true">
 											<label for="website">Website</label>
@@ -70,7 +70,7 @@
 									</div>
 									<ul class="actions">
 										<li><a href="index.html" class="button">Cancel</a></li>
-										<li><input type="submit" value="Send" class="primary" /></li>
+										<li><input type="submit" value="Send" class="primary" id="request-submit" /></li>
 									</ul>
 								</form>
 							</section>
@@ -92,25 +92,8 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<script>
-				(function() {
-					var params = new URLSearchParams(window.location.search);
-					var sent = params.get('sent');
-					var message = params.get('message');
-					var success = document.getElementById('request-success');
-					var error = document.getElementById('request-error');
-
-					if (sent === '1' && success)
-						success.style.display = 'block';
-
-					if (sent === '0' && error) {
-						if (message)
-							error.textContent = message;
-
-						error.style.display = 'block';
-					}
-				})();
-			</script>
+			<script src="assets/js/request-config.js"></script>
+			<script src="assets/js/request-form.js"></script>
 
 	</body>
 </html>
