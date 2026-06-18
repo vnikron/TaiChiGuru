@@ -30,3 +30,25 @@ Credits:
 		jQuery (jquery.com)
 		Scrollex (github.com/ajlkn/jquery.scrollex)
 		Responsive Tools (github.com/ajlkn/responsive-tools)
+
+
+Tai Chi Guru request form:
+
+	The static request form posts JSON to the Lambda Function URL configured in
+	assets/js/request-config.js.
+
+	Deploy lambda/request-handler.mjs as the Lambda handler and set these
+	environment variables if you need values other than the defaults:
+
+		FROM_EMAIL=support@taichiguru.com
+		TO_EMAIL=support@taichiguru.com
+		SUBJECT_PREFIX=[Tai Chi Guru]
+
+	The Lambda execution role needs permission to call ses:SendEmail or
+	ses:SendEmailV2. In SES sandbox mode, both FROM_EMAIL and TO_EMAIL must be
+	verified identities. The handler returns ok:true only after SES accepts the
+	email request.
+
+	Disable the Lambda Function URL CORS setting when using this handler. The
+	handler returns the CORS headers itself; enabling both creates duplicate
+	Access-Control-Allow-Origin headers in browsers.
