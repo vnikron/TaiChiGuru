@@ -80,6 +80,7 @@
 
 		fetch(config.endpointUrl, {
 			method: 'POST',
+			mode: 'no-cors',
 			headers: {
 				'Content-Type': 'text/plain',
 			},
@@ -90,6 +91,9 @@
 			}),
 		})
 			.then(function(response) {
+				if (response.type === 'opaque')
+					return {};
+
 				return response.text().then(function(text) {
 					var data = {};
 
