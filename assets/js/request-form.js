@@ -37,6 +37,16 @@
 			&& config.endpointUrl.indexOf('YOUR_LAMBDA_FUNCTION_URL_HERE') === -1;
 	}
 
+	function getResponseMessage(response, text, data) {
+		if (data.message)
+			return data.message;
+
+		if (text)
+			return text;
+
+		return 'Request service returned HTTP ' + response.status + '.';
+	}
+
 	if (!form)
 		return;
 
@@ -71,7 +81,7 @@
 		fetch(config.endpointUrl, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'text/plain',
 			},
 			body: JSON.stringify({
 				contactEmail: contactEmail,
@@ -90,7 +100,7 @@
 					}
 
 					if (!response.ok || data.ok === false)
-						throw new Error(data.message || 'The request could not be sent.');
+						throw new Error(getResponseMessage(response, text, data));
 
 					return data;
 				});
