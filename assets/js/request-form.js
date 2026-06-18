@@ -40,13 +40,19 @@
 	if (!form)
 		return;
 
-	form.addEventListener('submit', function(event) {
-		event.preventDefault();
+	var params = new URLSearchParams(window.location.search);
+	if (params.get('sent') === '1')
+		showStatus(success, 'Your request was sent. Thank you.');
+	else if (params.get('sent') === '0')
+		showStatus(error, params.get('message') || 'Your request could not be sent. Please try again.');
 
+	form.addEventListener('submit', function(event) {
 		if (!endpointReady()) {
-			showStatus(error, 'Request endpoint is not configured. Add your AWS Lambda URL to assets/js/request-config.js.');
+			setSending(true);
 			return;
 		}
+
+		event.preventDefault();
 
 		var honeypot = document.getElementById('website');
 		if (honeypot && honeypot.value)
