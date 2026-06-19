@@ -53,6 +53,7 @@ function parseBody(event) {
 			contactName: params.get('contactName') || params.get('name') || '',
 			contactEmail: params.get('contactEmail') || params.get('contact-email') || '',
 			comments: params.get('comments') || params.get('tai-chi-comments') || '',
+			avatarName: params.get('avatarName') || params.get('avatar-name') || '',
 			source: params.get('source') || '',
 			website: params.get('website') || '',
 		};
@@ -189,6 +190,7 @@ export async function handler(event) {
 	const contactEmail = clean(data.contactEmail);
 	const contactName = clean(data.contactName);
 	const comments = clean(data.comments);
+	const avatarName = clean(data.avatarName);
 	const isContactForm = data.source === 'tai-chi-guru-footer-form';
 
 	if (!validEmail(contactEmail))
@@ -201,6 +203,7 @@ export async function handler(event) {
 		isContactForm ? 'New Tai Chi Guru contact message' : 'New Tai Chi Guru set request',
 		'',
 		...(contactName ? [`Name: ${contactName}`] : []),
+		...(!isContactForm && avatarName ? [`Avatar: ${avatarName}`] : []),
 		`Contact email: ${contactEmail}`,
 		'',
 		isContactForm ? 'Message:' : 'Tai Chi set comments:',

@@ -49,13 +49,14 @@
 		return 'Request service returned HTTP ' + response.status + '.';
 	}
 
-	function sendRequest(contactEmail, comments, contactName, source, website) {
+	function sendRequest(contactEmail, comments, contactName, avatarName, source, website) {
 		var options = {
 			method: 'POST',
 			body: JSON.stringify({
 				contactName: contactName,
 				contactEmail: contactEmail,
 				comments: comments,
+				avatarName: avatarName,
 				source: source,
 				website: website,
 			}),
@@ -90,7 +91,31 @@
 	if (!form)
 		return;
 
+	var avatarSelect = document.getElementById('avatar-name');
+	var avatarPreview = document.getElementById('avatar-preview');
 	var params = new URLSearchParams(window.location.search);
+
+	function updateAvatarPreview() {
+		if (!avatarSelect || !avatarPreview)
+			return;
+
+		var avatarNumber = parseInt(avatarSelect.value.replace('Avatar', ''), 10);
+
+		if (!avatarNumber)
+			avatarNumber = 1;
+
+		avatarPreview.src = 'images/avatars/avatar-' + String(avatarNumber).padStart(2, '0') + '.webp';
+	}
+
+	if (avatarSelect) {
+		var requestedAvatar = params.get('avatar');
+		if (requestedAvatar && avatarSelect.querySelector('option[value="' + requestedAvatar + '"]'))
+			avatarSelect.value = requestedAvatar;
+
+		updateAvatarPreview();
+		avatarSelect.addEventListener('change', updateAvatarPreview);
+	}
+
 	if (params.get('sent') === '1')
 		showStatus(success, isFooterForm ? 'Your message was sent. Thank you.' : 'Your request was sent. Thank you.');
 	else if (params.get('sent') === '0')
@@ -117,6 +142,7 @@
 		var contactName = isFooterForm ? document.getElementById('name').value.trim() : '';
 		var contactEmail = document.getElementById(isFooterForm ? 'email' : 'contact-email').value.trim();
 		var comments = document.getElementById(isFooterForm ? 'message' : 'tai-chi-comments').value.trim();
+		var avatarName = avatarSelect ? avatarSelect.value : '';
 		var source = isFooterForm ? 'tai-chi-guru-footer-form' : 'tai-chi-guru-request-form';
 
 		if (!contactEmail || !comments) {
@@ -127,7 +153,7 @@
 		isSending = true;
 		setSending(true);
 
-		sendRequest(contactEmail, comments, contactName, source, honeypot ? honeypot.value : '')
+		sendRequest(contactEmail, comments, contactName, avatarName, source, honeypot ? honeypot.value : '')
 			.then(function() {
 				form.reset();
 				showStatus(success, isFooterForm ? 'Your message was sent. Thank you.' : 'Your request was sent. Thank you.');

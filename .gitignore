@@ -1,4 +1,5 @@
 .DS_Store
 Thumbs.db
+images/avatars/*.png
 work images/
 config/email.config.php

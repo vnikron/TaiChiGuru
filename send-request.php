@@ -164,6 +164,7 @@ if (!empty($_POST['website'] ?? '')) {
 $contactName = trim((string) ($_POST['name'] ?? ''));
 $contactEmail = trim((string) ($_POST['contact-email'] ?? $_POST['email'] ?? ''));
 $comments = trim((string) ($_POST['tai-chi-comments'] ?? $_POST['message'] ?? ''));
+$avatarName = trim((string) ($_POST['avatar-name'] ?? ''));
 
 if (!filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) {
     redirect_with_status($errorRedirect, 'Please enter a valid contact email.');
@@ -182,6 +183,10 @@ $bodyLines = [
 
 if ($contactName !== '') {
     $bodyLines[] = 'Name: ' . $contactName;
+}
+
+if ($avatarName !== '') {
+    $bodyLines[] = 'Avatar: ' . $avatarName;
 }
 
 $bodyLines = array_merge($bodyLines, [
