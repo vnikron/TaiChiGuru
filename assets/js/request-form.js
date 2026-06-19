@@ -1,10 +1,11 @@
 (function(window, document) {
 	'use strict';
 
-	var form = document.getElementById('request-set-form');
-	var submit = document.getElementById('request-submit');
-	var success = document.getElementById('request-success');
-	var error = document.getElementById('request-error');
+	var form = document.getElementById('request-set-form') || document.getElementById('footer-contact-form');
+	var isFooterForm = form && form.id === 'footer-contact-form';
+	var submit = document.getElementById(isFooterForm ? 'footer-submit' : 'request-submit');
+	var success = document.getElementById(isFooterForm ? 'footer-success' : 'request-success');
+	var error = document.getElementById(isFooterForm ? 'footer-error' : 'request-error');
 	var config = window.TaiChiGuruRequestConfig || {};
 
 	function showStatus(target, message) {
@@ -47,13 +48,14 @@
 		return 'Request service returned HTTP ' + response.status + '.';
 	}
 
-	function sendRequest(contactEmail, comments, useNoCors) {
+	function sendRequest(contactEmail, comments, contactName, source, useNoCors) {
 		var options = {
 			method: 'POST',
 			body: JSON.stringify({
+				contactName: contactName,
 				contactEmail: contactEmail,
 				comments: comments,
-				source: 'tai-chi-guru-request-form',
+				source: source,
 			}),
 		};
 
@@ -92,9 +94,9 @@
 
 	var params = new URLSearchParams(window.location.search);
 	if (params.get('sent') === '1')
-		showStatus(success, 'Your request was sent. Thank you.');
+		showStatus(success, isFooterForm ? 'Your message was sent. Thank you.' : 'Your request was sent. Thank you.');
 	else if (params.get('sent') === '0')
-		showStatus(error, params.get('message') || 'Your request could not be sent. Please try again.');
+		showStatus(error, params.get('message') || (isFooterForm ? 'Your message could not be sent. Please try again.' : 'Your request could not be sent. Please try again.'));
 
 	form.addEventListener('submit', function(event) {
 		if (!endpointReady()) {
@@ -108,29 +110,31 @@
 		if (honeypot && honeypot.value)
 			return;
 
-		var contactEmail = document.getElementById('contact-email').value.trim();
-		var comments = document.getElementById('tai-chi-comments').value.trim();
+		var contactName = isFooterForm ? document.getElementById('name').value.trim() : '';
+		var contactEmail = document.getElementById(isFooterForm ? 'email' : 'contact-email').value.trim();
+		var comments = document.getElementById(isFooterForm ? 'message' : 'tai-chi-comments').value.trim();
+		var source = isFooterForm ? 'tai-chi-guru-footer-form' : 'tai-chi-guru-request-form';
 
 		if (!contactEmail || !comments) {
-			showStatus(error, 'Please fill in your contact email and Tai Chi set comments.');
+			showStatus(error, isFooterForm ? 'Please fill in your email and message.' : 'Please fill in your contact email and Tai Chi set comments.');
 			return;
 		}
 
 		setSending(true);
 
-		sendRequest(contactEmail, comments, false)
+		sendRequest(contactEmail, comments, contactName, source, false)
 			.catch(function(fetchError) {
 				if (fetchError instanceof TypeError)
-					return sendRequest(contactEmail, comments, true);
+					return sendRequest(contactEmail, comments, contactName, source, true);
 
 				throw fetchError;
 			})
 			.then(function() {
 				form.reset();
-				showStatus(success, 'Your request was sent. Thank you.');
+				showStatus(success, isFooterForm ? 'Your message was sent. Thank you.' : 'Your request was sent. Thank you.');
 			})
 			.catch(function(fetchError) {
-				showStatus(error, fetchError.message || 'Your request could not be sent. Please try again.');
+				showStatus(error, fetchError.message || (isFooterForm ? 'Your message could not be sent. Please try again.' : 'Your request could not be sent. Please try again.'));
 			})
 			.finally(function() {
 				setSending(false);

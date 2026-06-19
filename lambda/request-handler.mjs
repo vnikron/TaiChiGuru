@@ -45,6 +45,7 @@ function parseBody(event) {
 	if (contentType.includes('application/x-www-form-urlencoded')) {
 		const params = new URLSearchParams(rawBody);
 		return {
+			contactName: params.get('contactName') || params.get('name') || '',
 			contactEmail: params.get('contactEmail') || params.get('contact-email') || '',
 			comments: params.get('comments') || params.get('tai-chi-comments') || '',
 			website: params.get('website') || '',
@@ -84,6 +85,7 @@ export async function handler(event) {
 		return response(200, { ok: true }, origin);
 
 	const contactEmail = clean(data.contactEmail);
+	const contactName = clean(data.contactName);
 	const comments = clean(data.comments);
 
 	if (!validEmail(contactEmail))
@@ -95,6 +97,7 @@ export async function handler(event) {
 	const body = [
 		'New Tai Chi Guru set request',
 		'',
+		...(contactName ? [`Name: ${contactName}`] : []),
 		`Contact email: ${contactEmail}`,
 		'',
 		'Tai Chi set comments:',

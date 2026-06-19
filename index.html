@@ -133,7 +133,13 @@
 				<!-- Footer -->
 					<footer id="footer">
 						<section>
-							<form method="post" action="send-request.php">
+							<div class="request-status request-status-success" id="footer-success">
+								Your message was sent. Thank you.
+							</div>
+							<div class="request-status request-status-error" id="footer-error">
+								Your message could not be sent. Please try again.
+							</div>
+							<form id="footer-contact-form" method="post" action="send-request.php">
 								<div class="fields">
 									<div class="field hidden-field" aria-hidden="true">
 										<label for="footer-website">Website</label>
@@ -153,7 +159,7 @@
 									</div>
 								</div>
 								<ul class="actions">
-									<li><input type="submit" value="Send Message" /></li>
+									<li><input type="submit" value="Send Message" id="footer-submit" /></li>
 								</ul>
 							</form>
 						</section>
@@ -194,6 +200,8 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script src="assets/js/request-config.js"></script>
+			<script src="assets/js/request-form.js"></script>
 
 	</body>
 </html>
