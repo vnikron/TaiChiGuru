@@ -47,6 +47,46 @@
 		return 'Request service returned HTTP ' + response.status + '.';
 	}
 
+	function sendRequest(contactEmail, comments, useNoCors) {
+		var options = {
+			method: 'POST',
+			body: JSON.stringify({
+				contactEmail: contactEmail,
+				comments: comments,
+				source: 'tai-chi-guru-request-form',
+			}),
+		};
+
+		if (useNoCors) {
+			options.mode = 'no-cors';
+		} else {
+			options.headers = {
+				'Content-Type': 'text/plain',
+			};
+		}
+
+		return fetch(config.endpointUrl, options)
+			.then(function(response) {
+				if (response.type === 'opaque')
+					return {};
+
+				return response.text().then(function(text) {
+					var data = {};
+
+					try {
+						data = text ? JSON.parse(text) : {};
+					} catch (parseError) {
+						data = {};
+					}
+
+					if (!response.ok || data.ok === false)
+						throw new Error(getResponseMessage(response, text, data));
+
+					return data;
+				});
+			});
+	}
+
 	if (!form)
 		return;
 
@@ -78,32 +118,12 @@
 
 		setSending(true);
 
-		fetch(config.endpointUrl, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'text/plain',
-			},
-			body: JSON.stringify({
-				contactEmail: contactEmail,
-				comments: comments,
-				source: 'tai-chi-guru-request-form',
-			}),
-		})
-			.then(function(response) {
-				return response.text().then(function(text) {
-					var data = {};
+		sendRequest(contactEmail, comments, false)
+			.catch(function(fetchError) {
+				if (fetchError instanceof TypeError)
+					return sendRequest(contactEmail, comments, true);
 
-					try {
-						data = text ? JSON.parse(text) : {};
-					} catch (parseError) {
-						data = {};
-					}
-
-					if (!response.ok || data.ok === false)
-						throw new Error(getResponseMessage(response, text, data));
-
-					return data;
-				});
+				throw fetchError;
 			})
 			.then(function() {
 				form.reset();
