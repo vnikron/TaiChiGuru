@@ -7,6 +7,7 @@
 	var success = document.getElementById(isFooterForm ? 'footer-success' : 'request-success');
 	var error = document.getElementById(isFooterForm ? 'footer-error' : 'request-error');
 	var config = window.TaiChiGuruRequestConfig || {};
+	var isSending = false;
 
 	function showStatus(target, message) {
 		if (success)
@@ -48,7 +49,7 @@
 		return 'Request service returned HTTP ' + response.status + '.';
 	}
 
-	function sendRequest(contactEmail, comments, contactName, source, useNoCors) {
+	function sendRequest(contactEmail, comments, contactName, source) {
 		var options = {
 			method: 'POST',
 			body: JSON.stringify({
@@ -59,13 +60,9 @@
 			}),
 		};
 
-		if (useNoCors) {
-			options.mode = 'no-cors';
-		} else {
-			options.headers = {
-				'Content-Type': 'text/plain',
-			};
-		}
+		options.headers = {
+			'Content-Type': 'text/plain',
+		};
 
 		return fetch(config.endpointUrl, options)
 			.then(function(response) {
@@ -99,7 +96,13 @@
 		showStatus(error, params.get('message') || (isFooterForm ? 'Your message could not be sent. Please try again.' : 'Your request could not be sent. Please try again.'));
 
 	form.addEventListener('submit', function(event) {
+		if (isSending) {
+			event.preventDefault();
+			return;
+		}
+
 		if (!endpointReady()) {
+			isSending = true;
 			setSending(true);
 			return;
 		}
@@ -120,15 +123,10 @@
 			return;
 		}
 
+		isSending = true;
 		setSending(true);
 
-		sendRequest(contactEmail, comments, contactName, source, false)
-			.catch(function(fetchError) {
-				if (fetchError instanceof TypeError)
-					return sendRequest(contactEmail, comments, contactName, source, true);
-
-				throw fetchError;
-			})
+		sendRequest(contactEmail, comments, contactName, source)
 			.then(function() {
 				form.reset();
 				showStatus(success, isFooterForm ? 'Your message was sent. Thank you.' : 'Your request was sent. Thank you.');
@@ -137,6 +135,7 @@
 				showStatus(error, fetchError.message || (isFooterForm ? 'Your message could not be sent. Please try again.' : 'Your request could not be sent. Please try again.'));
 			})
 			.finally(function() {
+				isSending = false;
 				setSending(false);
 			});
 	});

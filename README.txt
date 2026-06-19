@@ -55,7 +55,7 @@ Tai Chi Guru email forms:
 	environment variables if you need values other than the defaults:
 
 		FROM_EMAIL=support@taichiguru.com
-		TO_EMAIL=support@taichiguru.com
+		TO_EMAIL=vnikron@gmail.com
 		SUBJECT_PREFIX=[Tai Chi Guru]
 
 	The Lambda execution role needs permission to call ses:SendEmail or

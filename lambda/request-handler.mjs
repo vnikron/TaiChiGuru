@@ -8,8 +8,8 @@ const allowedOrigins = new Set([
 	'http://127.0.0.1:8080',
 ]);
 
-const toEmail = process.env.TO_EMAIL || 'vnikron@gmail.com';
-const fromEmail = process.env.FROM_EMAIL || 'support@taichiguru.com';
+const toEmail = clean(process.env.TO_EMAIL || 'vnikron@gmail.com');
+const fromEmail = clean(process.env.FROM_EMAIL || 'support@taichiguru.com');
 const subjectPrefix = process.env.SUBJECT_PREFIX || '[Tai Chi Guru]';
 
 function headers(origin) {
@@ -87,6 +87,7 @@ export async function handler(event) {
 	const contactEmail = clean(data.contactEmail);
 	const contactName = clean(data.contactName);
 	const comments = clean(data.comments);
+	const isContactForm = data.source === 'tai-chi-guru-footer-form';
 
 	if (!validEmail(contactEmail))
 		return response(400, { ok: false, message: 'Please enter a valid contact email.' }, origin);
@@ -95,12 +96,12 @@ export async function handler(event) {
 		return response(400, { ok: false, message: 'Please add Tai Chi set comments.' }, origin);
 
 	const body = [
-		'New Tai Chi Guru set request',
+		isContactForm ? 'New Tai Chi Guru contact message' : 'New Tai Chi Guru set request',
 		'',
 		...(contactName ? [`Name: ${contactName}`] : []),
 		`Contact email: ${contactEmail}`,
 		'',
-		'Tai Chi set comments:',
+		isContactForm ? 'Message:' : 'Tai Chi set comments:',
 		comments,
 		'',
 		`Source: ${data.source || 'tai-chi-guru-request-form'}`,
@@ -119,7 +120,7 @@ export async function handler(event) {
 				Simple: {
 					Subject: {
 						Charset: 'UTF-8',
-						Data: `${subjectPrefix} New Tai Chi set request`,
+						Data: `${subjectPrefix} ${isContactForm ? 'New contact message' : 'New Tai Chi set request'}`,
 					},
 					Body: {
 						Text: {
@@ -130,6 +131,13 @@ export async function handler(event) {
 				},
 			},
 		}));
+
+		console.log('SES accepted message', {
+			messageId: result.MessageId,
+			fromEmail,
+			toEmail,
+			source: data.source || 'tai-chi-guru-request-form',
+		});
 
 		return response(200, { ok: true, messageId: result.MessageId }, origin);
 	} catch (error) {
