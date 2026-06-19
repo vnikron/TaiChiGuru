@@ -49,7 +49,7 @@
 		return 'Request service returned HTTP ' + response.status + '.';
 	}
 
-	function sendRequest(contactEmail, comments, contactName, source) {
+	function sendRequest(contactEmail, comments, contactName, source, website) {
 		var options = {
 			method: 'POST',
 			body: JSON.stringify({
@@ -57,6 +57,7 @@
 				contactEmail: contactEmail,
 				comments: comments,
 				source: source,
+				website: website,
 			}),
 		};
 
@@ -109,7 +110,7 @@
 
 		event.preventDefault();
 
-		var honeypot = document.getElementById('website');
+		var honeypot = document.getElementById(isFooterForm ? 'footer-website' : 'website');
 		if (honeypot && honeypot.value)
 			return;
 
@@ -126,7 +127,7 @@
 		isSending = true;
 		setSending(true);
 
-		sendRequest(contactEmail, comments, contactName, source)
+		sendRequest(contactEmail, comments, contactName, source, honeypot ? honeypot.value : '')
 			.then(function() {
 				form.reset();
 				showStatus(success, isFooterForm ? 'Your message was sent. Thank you.' : 'Your request was sent. Thank you.');

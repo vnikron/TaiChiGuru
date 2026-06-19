@@ -51,18 +51,23 @@ Tai Chi Guru email forms:
 	Set assets/js/request-config.js endpointUrl to an AWS Lambda Function URL or
 	API Gateway endpoint to submit JSON with JavaScript instead of PHP.
 
-	Deploy lambda/request-handler.mjs as the Lambda handler and set these
-	environment variables if you need values other than the defaults:
+	Deploy lambda/request-handler.mjs as the Lambda handler. It uses the
+	Lambda execution role to call the SES v2 HTTPS API directly, so no npm
+	dependencies need to be bundled with the function. Set these environment
+	variables if you need values other than the defaults:
 
 		FROM_EMAIL=support@taichiguru.com
 		TO_EMAIL=vnikron@gmail.com
 		SUBJECT_PREFIX=[Tai Chi Guru]
+		MANAGED_CORS=1
 
 	The Lambda execution role needs permission to call ses:SendEmail or
 	ses:SendEmailV2. In SES sandbox mode, both FROM_EMAIL and TO_EMAIL must be
 	verified identities. The handler returns ok:true only after SES accepts the
 	email request.
 
-	Disable the Lambda Function URL CORS setting when using this handler. The
-	handler returns the CORS headers itself; enabling both creates duplicate
-	Access-Control-Allow-Origin headers in browsers.
+	Leave the Lambda Function URL CORS setting enabled when MANAGED_CORS is
+	enabled or omitted. If you disable Function URL CORS, set MANAGED_CORS=0 so
+	the handler returns the CORS headers itself. Do not enable both Function URL
+	CORS and handler-managed CORS; duplicate Access-Control-Allow-Origin headers
+	can break browser submissions.

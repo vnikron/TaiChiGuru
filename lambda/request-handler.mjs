@@ -1,6 +1,4 @@
-import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
-
-const ses = new SESv2Client({});
+import { createHash, createHmac } from 'node:crypto';
 
 const allowedOrigins = new Set([
 	'https://www.taichiguru.com',
@@ -11,8 +9,15 @@ const allowedOrigins = new Set([
 const toEmail = clean(process.env.TO_EMAIL || 'vnikron@gmail.com');
 const fromEmail = clean(process.env.FROM_EMAIL || 'support@taichiguru.com');
 const subjectPrefix = process.env.SUBJECT_PREFIX || '[Tai Chi Guru]';
+const useManagedCors = process.env.MANAGED_CORS !== '0';
 
 function headers(origin) {
+	if (useManagedCors) {
+		return {
+			'content-type': 'application/json',
+		};
+	}
+
 	const allowOrigin = allowedOrigins.has(origin) ? origin : 'https://www.taichiguru.com';
 
 	return {
@@ -48,6 +53,7 @@ function parseBody(event) {
 			contactName: params.get('contactName') || params.get('name') || '',
 			contactEmail: params.get('contactEmail') || params.get('contact-email') || '',
 			comments: params.get('comments') || params.get('tai-chi-comments') || '',
+			source: params.get('source') || '',
 			website: params.get('website') || '',
 		};
 	}
@@ -57,6 +63,102 @@ function parseBody(event) {
 
 function clean(value) {
 	return String(value || '').trim();
+}
+
+function hash(value) {
+	return createHash('sha256').update(value).digest('hex');
+}
+
+function hmac(key, value, encoding) {
+	return createHmac('sha256', key).update(value).digest(encoding);
+}
+
+function getSignatureKey(secretKey, dateStamp, region, service) {
+	const dateKey = hmac(`AWS4${secretKey}`, dateStamp);
+	const regionKey = hmac(dateKey, region);
+	const serviceKey = hmac(regionKey, service);
+	return hmac(serviceKey, 'aws4_request');
+}
+
+function amzDate(date) {
+	return date.toISOString().replace(/[:-]|\.\d{3}/g, '');
+}
+
+async function sendEmail(message) {
+	const region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || 'ca-central-1';
+	const accessKey = process.env.AWS_ACCESS_KEY_ID;
+	const secretKey = process.env.AWS_SECRET_ACCESS_KEY;
+	const sessionToken = process.env.AWS_SESSION_TOKEN;
+
+	if (!accessKey || !secretKey)
+		throw new Error('Lambda AWS credentials are unavailable.');
+
+	const service = 'ses';
+	const host = `email.${region}.amazonaws.com`;
+	const path = '/v2/email/outbound-emails';
+	const endpoint = `https://${host}${path}`;
+	const now = new Date();
+	const dateTime = amzDate(now);
+	const dateStamp = dateTime.slice(0, 8);
+	const payload = JSON.stringify(message);
+	const payloadHash = hash(payload);
+	const canonicalHeaders = [
+		`content-type:application/json`,
+		`host:${host}`,
+		`x-amz-date:${dateTime}`,
+		...(sessionToken ? [`x-amz-security-token:${sessionToken}`] : []),
+	].join('\n') + '\n';
+	const signedHeaders = [
+		'content-type',
+		'host',
+		'x-amz-date',
+		...(sessionToken ? ['x-amz-security-token'] : []),
+	].join(';');
+	const canonicalRequest = [
+		'POST',
+		path,
+		'',
+		canonicalHeaders,
+		signedHeaders,
+		payloadHash,
+	].join('\n');
+	const credentialScope = `${dateStamp}/${region}/${service}/aws4_request`;
+	const stringToSign = [
+		'AWS4-HMAC-SHA256',
+		dateTime,
+		credentialScope,
+		hash(canonicalRequest),
+	].join('\n');
+	const signature = hmac(getSignatureKey(secretKey, dateStamp, region, service), stringToSign, 'hex');
+	const authorization = `AWS4-HMAC-SHA256 Credential=${accessKey}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
+	const requestHeaders = {
+		'content-type': 'application/json',
+		'x-amz-date': dateTime,
+		'authorization': authorization,
+	};
+
+	if (sessionToken)
+		requestHeaders['x-amz-security-token'] = sessionToken;
+
+	const result = await fetch(endpoint, {
+		method: 'POST',
+		headers: requestHeaders,
+		body: payload,
+	});
+	const text = await result.text();
+	let data = {};
+
+	try {
+		data = text ? JSON.parse(text) : {};
+	} catch (error) {
+		data = { message: text };
+	}
+
+	if (!result.ok) {
+		throw new Error(data.message || data.Message || `SES returned HTTP ${result.status}`);
+	}
+
+	return data;
 }
 
 function validEmail(email) {
@@ -110,7 +212,7 @@ export async function handler(event) {
 	].join('\n');
 
 	try {
-		const result = await ses.send(new SendEmailCommand({
+		const result = await sendEmail({
 			FromEmailAddress: fromEmail,
 			Destination: {
 				ToAddresses: [toEmail],
@@ -130,10 +232,10 @@ export async function handler(event) {
 					},
 				},
 			},
-		}));
+		});
 
 		console.log('SES accepted message', {
-			messageId: result.MessageId,
+			messageId: result.MessageId || result.MessageId,
 			fromEmail,
 			toEmail,
 			source: data.source || 'tai-chi-guru-request-form',
