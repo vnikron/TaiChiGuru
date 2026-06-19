@@ -9,6 +9,8 @@
 		<title>Tai Chi Guru</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="preload" as="image" href="images/hero-background-768.webp" type="image/webp" media="(max-width: 736px)" fetchpriority="high" />
+		<link rel="preload" as="image" href="images/hero-background-1280.webp" type="image/webp" media="(min-width: 737px)" fetchpriority="high" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<link rel="stylesheet" href="assets/css/tai-chi-guru.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
@@ -58,7 +60,12 @@
 									<h2><a href="#">Morning Temple Flow</a></h2>
 									<p>A luminous opening set for waking the spine, settling the breath, and moving into the day with grounded attention.</p>
 								</header>
-								<a href="https://tai-chi1.s3.us-east-2.amazonaws.com/Introduction_v1.mp4" class="image main"><img src="images/Introduction_v2.png" alt="Tai Chi practice in a moonlit celestial temple" /></a>
+								<div class="image main tai-video-player">
+									<video controls preload="metadata" poster="images/Introduction_v2.webp" aria-label="Play Morning Temple Flow video">
+										<source src="https://tai-chi1.s3.us-east-2.amazonaws.com/Introduction_v1.mp4" type="video/mp4" />
+										<a href="https://tai-chi1.s3.us-east-2.amazonaws.com/Introduction_v1.mp4">Play Morning Temple Flow video</a>
+									</video>
+								</div>
 								<ul class="actions special">
 									<li><a href="request.html" class="button large primary">Customize This Set</a></li>
 								</ul>
@@ -72,7 +79,12 @@
 										<h2><a href="#">Good Morning<br />
 										Wake Up</a></h2>
 									</header>
-									<a href="https://tai-chi1.s3.us-east-2.amazonaws.com/taichi_set1_v1.mp4" class="image fit"><img src="images/taichi_set1_img1.png" alt="Tai Chi Morning Set One" /></a>
+									<div class="image fit tai-video-player">
+										<video controls preload="metadata" poster="images/taichi_set1_img1.webp" aria-label="Play Good Morning Wake Up video">
+											<source src="https://tai-chi1.s3.us-east-2.amazonaws.com/taichi_set1_v1.mp4" type="video/mp4" />
+											<a href="https://tai-chi1.s3.us-east-2.amazonaws.com/taichi_set1_v1.mp4">Play Good Morning Wake Up video</a>
+										</video>
+									</div>
 									<p>Morning set to wake up your soul and body.</p>
 									<ul class="actions special">
 										<li><a href="request.html" class="button">Request Variant</a></li>
@@ -84,7 +96,12 @@
 										<h2><a href="#">Cosmic Group<br />
 										Flow</a></h2>
 									</header>
-									<a href="#" class="image fit"><img src="images/set-cosmic-group.png" alt="Group Tai Chi practice in a colorful cosmic meadow" /></a>
+									<a href="#" class="image fit">
+										<picture>
+											<source srcset="images/set-cosmic-group.webp" type="image/webp" />
+											<img src="images/set-cosmic-group.png" alt="Group Tai Chi practice in a colorful cosmic meadow" loading="lazy" decoding="async" />
+										</picture>
+									</a>
 									<p>A brighter practice for groups, classes, and playful warmups that keep the rhythm accessible.</p>
 									<ul class="actions special">
 										<li><a href="request.html" class="button">Request Variant</a></li>
@@ -96,7 +113,12 @@
 										<h2><a href="#">Garden Circle<br />
 										Practice</a></h2>
 									</header>
-									<a href="#" class="image fit"><img src="images/set-garden-circle.png" alt="Tai Chi guide teaching a quiet garden circle" /></a>
+									<a href="#" class="image fit">
+										<picture>
+											<source srcset="images/set-garden-circle.webp" type="image/webp" />
+											<img src="images/set-garden-circle.png" alt="Tai Chi guide teaching a quiet garden circle" loading="lazy" decoding="async" />
+										</picture>
+									</a>
 									<p>A balanced teaching set built around circles, posture resets, and clear transitions for beginners.</p>
 									<ul class="actions special">
 										<li><a href="request.html" class="button">Request Variant</a></li>
@@ -108,7 +130,12 @@
 										<h2><a href="#">Blue Form<br />
 										Training</a></h2>
 									</header>
-									<a href="#" class="image fit"><img src="images/set-blue-form.png" alt="Close Tai Chi hand form in a shaded garden" /></a>
+									<a href="#" class="image fit">
+										<picture>
+											<source srcset="images/set-blue-form.webp" type="image/webp" />
+											<img src="images/set-blue-form.png" alt="Close Tai Chi hand form in a shaded garden" loading="lazy" decoding="async" />
+										</picture>
+									</a>
 									<p>A compact form set for hand placement, shoulder release, and controlled defensive movement.</p>
 									<ul class="actions special">
 										<li><a href="request.html" class="button">Request Variant</a></li>
