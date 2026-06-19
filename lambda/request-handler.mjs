@@ -8,7 +8,7 @@ const allowedOrigins = new Set([
 	'http://127.0.0.1:8080',
 ]);
 
-const toEmail = process.env.TO_EMAIL || 'support@taichiguru.com';
+const toEmail = process.env.TO_EMAIL || 'vnikron@gmail.com';
 const fromEmail = process.env.FROM_EMAIL || 'support@taichiguru.com';
 const subjectPrefix = process.env.SUBJECT_PREFIX || '[Tai Chi Guru]';
 

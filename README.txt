@@ -32,10 +32,24 @@ Credits:
 		Responsive Tools (github.com/ajlkn/responsive-tools)
 
 
-Tai Chi Guru request form:
+Tai Chi Guru email forms:
 
-	The static request form posts JSON to the Lambda Function URL configured in
-	assets/js/request-config.js.
+	Run locally with PHP from the site root:
+
+		php -S localhost:8000
+
+	Copy config/email.config.example.php to config/email.config.php and fill in
+	the real SMTP password before sending live mail. The PHP handler uses the
+	settings in that file and is ignored by Git.
+
+	The request page and the footer contact form both post to send-request.php.
+	By default, assets/js/request-config.js leaves endpointUrl blank so the
+	request page uses the PHP handler.
+
+	Optional Lambda mode:
+
+	Set assets/js/request-config.js endpointUrl to an AWS Lambda Function URL or
+	API Gateway endpoint to submit JSON with JavaScript instead of PHP.
 
 	Deploy lambda/request-handler.mjs as the Lambda handler and set these
 	environment variables if you need values other than the defaults:

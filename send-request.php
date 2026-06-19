@@ -153,15 +153,17 @@ if (!is_file($configPath)) {
 }
 
 $config = require $configPath;
-$successRedirect = (string) $config['site']['success_redirect'];
-$errorRedirect = (string) $config['site']['error_redirect'];
+$isContactForm = isset($_POST['message']) || isset($_POST['name']) || isset($_POST['email']);
+$successRedirect = $isContactForm ? 'index.html?sent=1' : (string) $config['site']['success_redirect'];
+$errorRedirect = $isContactForm ? 'index.html?sent=0' : (string) $config['site']['error_redirect'];
 
 if (!empty($_POST['website'] ?? '')) {
     redirect_with_status($successRedirect);
 }
 
-$contactEmail = trim((string) ($_POST['contact-email'] ?? ''));
-$comments = trim((string) ($_POST['tai-chi-comments'] ?? ''));
+$contactName = trim((string) ($_POST['name'] ?? ''));
+$contactEmail = trim((string) ($_POST['contact-email'] ?? $_POST['email'] ?? ''));
+$comments = trim((string) ($_POST['tai-chi-comments'] ?? $_POST['message'] ?? ''));
 
 if (!filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) {
     redirect_with_status($errorRedirect, 'Please enter a valid contact email.');
@@ -172,18 +174,26 @@ if ($comments === '') {
 }
 
 $subjectPrefix = clean_header_value((string) $config['mail']['subject_prefix']);
-$subject = $subjectPrefix . ' New Tai Chi set request';
-$body = implode("\n", [
-    'New Tai Chi Guru set request',
+$subject = $subjectPrefix . ($isContactForm ? ' New contact message' : ' New Tai Chi set request');
+$bodyLines = [
+    $isContactForm ? 'New Tai Chi Guru contact message' : 'New Tai Chi Guru set request',
     '',
+];
+
+if ($contactName !== '') {
+    $bodyLines[] = 'Name: ' . $contactName;
+}
+
+$bodyLines = array_merge($bodyLines, [
     'Contact email: ' . $contactEmail,
     '',
-    'Tai Chi set comments:',
+    $isContactForm ? 'Message:' : 'Tai Chi set comments:',
     $comments,
     '',
     'Sent from: ' . ($_SERVER['HTTP_HOST'] ?? 'unknown host'),
     'Date: ' . date(DATE_RFC2822),
 ]);
+$body = implode("\n", $bodyLines);
 
 try {
     smtp_send($config, $subject, $body, $contactEmail);
