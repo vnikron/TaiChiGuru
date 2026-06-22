@@ -204,7 +204,7 @@ export async function handler(event) {
 		isContactForm ? 'New Tai Chi Guru contact message' : 'New Tai Chi Guru set request',
 		'',
 		...(contactName ? [`Name: ${contactName}`] : []),
-		...(!isContactForm && avatarName ? [`Avatar: ${avatarName}`] : []),
+		...(!isContactForm && avatarName ? [`selected avatar: ${avatarName}`] : []),
 		`Contact email: ${contactEmail}`,
 		'',
 		isContactForm ? 'Message:' : 'Tai Chi set comments:',
