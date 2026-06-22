@@ -185,8 +185,8 @@ if ($contactName !== '') {
     $bodyLines[] = 'Name: ' . $contactName;
 }
 
-if ($avatarName !== '') {
-    $bodyLines[] = 'selected avatar: ' . $avatarName;
+if (!$isContactForm) {
+    $bodyLines[] = 'selected avatar: ' . ($avatarName !== '' ? $avatarName : 'Not selected');
 }
 
 $bodyLines = array_merge($bodyLines, [

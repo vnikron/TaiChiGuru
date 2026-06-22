@@ -66,10 +66,13 @@
 			'Content-Type': 'text/plain',
 		};
 
+		if (config.useNoCors)
+			options.mode = 'no-cors';
+
 		return fetch(config.endpointUrl, options)
 			.then(function(response) {
 				if (response.type === 'opaque')
-					return {};
+					return { ok: true };
 
 				return response.text().then(function(text) {
 					var data = {};
