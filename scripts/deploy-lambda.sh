@@ -22,20 +22,36 @@ if ! aws sts get-caller-identity >/dev/null; then
 	exit 1
 fi
 
+RUNTIME="$(aws lambda get-function-configuration \
+	--function-name "$FUNCTION_NAME" \
+	--region "$REGION" \
+	--query Runtime \
+	--output text)"
+
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
-cp "$ROOT_DIR/lambda/request-handler.mjs" "$BUILD_DIR/request-handler.mjs"
-cp "$ROOT_DIR/lambda/index.mjs" "$BUILD_DIR/index.mjs"
 
-(
-	cd "$BUILD_DIR"
-	zip -q "$ZIP_FILE" index.mjs request-handler.mjs
-)
+if [[ "$RUNTIME" == python* ]]; then
+	cp "$ROOT_DIR/lambda/lambda_function.py" "$BUILD_DIR/lambda_function.py"
+	(
+		cd "$BUILD_DIR"
+		zip -q "$ZIP_FILE" lambda_function.py
+	)
+else
+	cp "$ROOT_DIR/lambda/request-handler.mjs" "$BUILD_DIR/request-handler.mjs"
+	cp "$ROOT_DIR/lambda/index.mjs" "$BUILD_DIR/index.mjs"
+	(
+		cd "$BUILD_DIR"
+		zip -q "$ZIP_FILE" index.mjs request-handler.mjs
+	)
+fi
 
 aws lambda update-function-code \
 	--function-name "$FUNCTION_NAME" \
 	--region "$REGION" \
 	--zip-file "fileb://$ZIP_FILE" \
-	--publish
+	--publish \
+	--query '{FunctionName:FunctionName,Runtime:Runtime,Handler:Handler,LastModified:LastModified,Version:Version,LastUpdateStatus:LastUpdateStatus}' \
+	--output table
 
-echo "Deployed $FUNCTION_NAME in $REGION from lambda/request-handler.mjs"
+echo "Deployed $FUNCTION_NAME in $REGION for $RUNTIME"

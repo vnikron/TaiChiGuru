@@ -69,8 +69,8 @@ Tai Chi Guru email forms:
 	In Visual Studio Code, run the task "Deploy Lambda: request-email1". The task
 	packages lambda/request-handler.mjs and updates the request-email1 Lambda
 	function in ca-central-1. The package includes index.mjs and
-	request-handler.mjs, so the Lambda handler can be index.handler or
-	request-handler.handler.
+	request-handler.mjs for Node.js Lambdas. For Python Lambdas, it packages
+	lambda/lambda_function.py for the lambda_function.lambda_handler handler.
 
 	The Lambda execution role needs permission to call ses:SendEmail or
 	ses:SendEmailV2. In SES sandbox mode, both FROM_EMAIL and TO_EMAIL must be
