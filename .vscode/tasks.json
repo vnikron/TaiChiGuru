@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Deploy Lambda: request-email1",
+			"type": "shell",
+			"command": "${workspaceFolder}/scripts/deploy-lambda.sh",
+			"args": [
+				"request-email1"
+			],
+			"problemMatcher": []
+		}
+	]
+}

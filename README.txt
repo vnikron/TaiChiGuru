@@ -61,6 +61,15 @@ Tai Chi Guru email forms:
 		SUBJECT_PREFIX=[Tai Chi Guru]
 		HANDLER_CORS=1
 
+	To deploy the Lambda from this workspace:
+
+		aws login
+		./scripts/deploy-lambda.sh
+
+	In Visual Studio Code, run the task "Deploy Lambda: request-email1". The task
+	packages lambda/request-handler.mjs and updates the request-email1 Lambda
+	function in ca-central-1.
+
 	The Lambda execution role needs permission to call ses:SendEmail or
 	ses:SendEmailV2. In SES sandbox mode, both FROM_EMAIL and TO_EMAIL must be
 	verified identities. The handler returns ok:true only after SES accepts the
