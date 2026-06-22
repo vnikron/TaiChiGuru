@@ -1,6 +1,7 @@
 import { createHash, createHmac } from 'node:crypto';
 
 const allowedOrigins = new Set([
+	'https://taichiguru.com',
 	'https://www.taichiguru.com',
 	'http://localhost:8080',
 	'http://127.0.0.1:8080',
@@ -9,10 +10,10 @@ const allowedOrigins = new Set([
 const toEmail = clean(process.env.TO_EMAIL || 'vnikron@gmail.com');
 const fromEmail = clean(process.env.FROM_EMAIL || 'support@taichiguru.com');
 const subjectPrefix = process.env.SUBJECT_PREFIX || '[Tai Chi Guru]';
-const useManagedCors = process.env.MANAGED_CORS !== '0';
+const useHandlerCors = process.env.HANDLER_CORS === '1';
 
 function headers(origin) {
-	if (useManagedCors) {
+	if (!useHandlerCors) {
 		return {
 			'content-type': 'application/json',
 		};

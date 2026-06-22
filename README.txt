@@ -59,15 +59,14 @@ Tai Chi Guru email forms:
 		FROM_EMAIL=support@taichiguru.com
 		TO_EMAIL=vnikron@gmail.com
 		SUBJECT_PREFIX=[Tai Chi Guru]
-		MANAGED_CORS=1
+		HANDLER_CORS=1
 
 	The Lambda execution role needs permission to call ses:SendEmail or
 	ses:SendEmailV2. In SES sandbox mode, both FROM_EMAIL and TO_EMAIL must be
 	verified identities. The handler returns ok:true only after SES accepts the
 	email request.
 
-	Leave the Lambda Function URL CORS setting enabled when MANAGED_CORS is
-	enabled or omitted. If you disable Function URL CORS, set MANAGED_CORS=0 so
-	the handler returns the CORS headers itself. Do not enable both Function URL
-	CORS and handler-managed CORS; duplicate Access-Control-Allow-Origin headers
-	can break browser submissions.
+	Leave the Lambda Function URL CORS setting enabled by default. If you disable
+	Function URL CORS, set HANDLER_CORS=1 so the handler returns the CORS headers
+	itself. Do not enable both Function URL CORS and handler-managed CORS;
+	duplicate Access-Control-Allow-Origin headers can break browser submissions.
