@@ -66,13 +66,10 @@
 			'Content-Type': 'text/plain',
 		};
 
-		if (config.useNoCors)
-			options.mode = 'no-cors';
-
 		return fetch(config.endpointUrl, options)
 			.then(function(response) {
 				if (response.type === 'opaque')
-					return { ok: true };
+					throw new Error('Request service did not return a readable response.');
 
 				return response.text().then(function(text) {
 					var data = {};

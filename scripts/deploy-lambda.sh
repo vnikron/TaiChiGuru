@@ -25,10 +25,11 @@ fi
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 cp "$ROOT_DIR/lambda/request-handler.mjs" "$BUILD_DIR/request-handler.mjs"
+cp "$ROOT_DIR/lambda/index.mjs" "$BUILD_DIR/index.mjs"
 
 (
 	cd "$BUILD_DIR"
-	zip -q "$ZIP_FILE" request-handler.mjs
+	zip -q "$ZIP_FILE" index.mjs request-handler.mjs
 )
 
 aws lambda update-function-code \
